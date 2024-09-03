@@ -1,23 +1,20 @@
-name: Reusable Workflow with Dynamic Concurrency
+name: Reusable Workflow with Matrix and Concurrency
 
 on:
   workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
-      experience:
-        required: true
-        type: string
 
 jobs:
-  reusable_job:
+  matrix_job:
+    strategy:
+      matrix:
+        environment: [prod, stage, stage_ca, prod_ca]
+        experience: [old, new]
     runs-on: ubuntu-latest
     concurrency: 
-      group: ${{ inputs.environment }}-${{ inputs.experience }}
+      group: ${{ matrix.environment }}-${{ matrix.experience }}
       cancel-in-progress: true
     steps:
       - name: Run task
         run: |
-          echo "Running task for environment: ${{ inputs.environment }}"
-          echo "Running task for experience: ${{ inputs.experience }}"
+          echo "Running task for environment: ${{ matrix.environment }}"
+          echo "Running task for experience: ${{ matrix.experience }}"
