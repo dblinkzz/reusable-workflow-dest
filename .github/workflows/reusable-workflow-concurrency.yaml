@@ -1,0 +1,23 @@
+name: Reusable Workflow with Dynamic Concurrency
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      experience:
+        required: true
+        type: string
+
+jobs:
+  reusable_job:
+    runs-on: ubuntu-latest
+    concurrency: 
+      group: ${{ inputs.environment }}-${{ inputs.experience }}
+      cancel-in-progress: true
+    steps:
+      - name: Run task
+        run: |
+          echo "Running task for environment: ${{ inputs.environment }}"
+          echo "Running task for experience: ${{ inputs.experience }}"
